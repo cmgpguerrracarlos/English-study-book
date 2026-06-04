@@ -9,9 +9,9 @@ const views = document.querySelectorAll("[data-view]");
 const navButtons = document.querySelectorAll("[data-view-link]");
 
 function loadProgress() {
-  const fallback = { attempts: [], completedLessons: [], reviewQueue: [] };
+  const fallback = { attempts: [], completedLessons: [], reviewQueue: [], writings: [] };
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || fallback;
+    return { ...fallback, ...(JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}) };
   } catch (error) {
     return fallback;
   }
@@ -27,6 +27,10 @@ function normalizeAnswer(value) {
     .toLowerCase()
     .replace(/[.?!]/g, "")
     .replace(/\s+/g, " ");
+}
+
+function countWords(text) {
+  return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
 function getAccuracy() {
@@ -50,7 +54,7 @@ function getSkillSnapshot() {
       ? Math.round((attempts.filter((attempt) => attempt.isCorrect).length / attempts.length) * 100)
       : skill.score;
 
-    return { ...skill, score, attempts };
+    return { ...skill, score };
   });
 }
 
@@ -70,29 +74,26 @@ function renderDashboard() {
   document.querySelector("#accuracyMetric").textContent = `${getAccuracy()}%`;
   document.querySelector("#attemptsMetric").textContent = state.progress.attempts.length;
   document.querySelector("#reviewMetric").textContent = getWeakSkillCount();
-  document.querySelector("#streakMetric").textContent = state.progress.attempts.length > 0 ? 2 : 1;
+  document.querySelector("#streakMetric").textContent =
+    state.progress.attempts.length + state.progress.writings.length > 0 ? 2 : 1;
   document.querySelector("#nextLessonTitle").textContent = learningData.lesson.title;
   document.querySelector("#nextLessonGoal").textContent = learningData.lesson.goal;
 }
 
 function renderSkills() {
   const container = document.querySelector("#skillCards");
-  container.innerHTML = getSkillSnapshot().map((skill) => {
-    const skillScore = skill.score;
-
-    return `
+  container.innerHTML = getSkillSnapshot().map((skill) => `
     <article class="skill-card tone-${skill.tone}">
       <div class="skill-card-header">
         <h3>${skill.name}</h3>
-        <span>${skillScore}%</span>
+        <span>${skill.score}%</span>
       </div>
       <div class="progress-track" aria-hidden="true">
-        <span style="width: ${skillScore}%"></span>
+        <span style="width: ${skill.score}%"></span>
       </div>
       <p>${skill.focus}</p>
     </article>
-  `;
-  }).join("");
+  `).join("");
 }
 
 function renderRecommendations() {
@@ -240,9 +241,20 @@ function renderReviewOverview(cards) {
 
 function renderHistory() {
   const container = document.querySelector("#historyList");
-  const attempts = [...state.progress.attempts].slice(-5).reverse();
+  const entries = [
+    ...state.progress.attempts.map((attempt) => ({ ...attempt })),
+    ...state.progress.writings.map((writing) => ({
+      skill: "Writing",
+      isCorrect: writing.average >= 3.5,
+      prompt: learningData.writing.title,
+      topic: `score ${writing.average}/4`,
+      createdAt: writing.createdAt
+    }))
+  ]
+    .sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt))
+    .slice(0, 5);
 
-  if (attempts.length === 0) {
+  if (entries.length === 0) {
     container.innerHTML = `
       <article class="history-card">
         <p>No hay historial todavia. El primer intento aparecera aqui con skill, resultado y fecha.</p>
@@ -251,7 +263,7 @@ function renderHistory() {
     return;
   }
 
-  container.innerHTML = attempts.map((attempt) => `
+  container.innerHTML = entries.map((attempt) => `
     <article class="history-card">
       <div class="history-header">
         <strong>${attempt.skill}</strong>
@@ -282,6 +294,118 @@ function renderPracticeSummary() {
       <span>accuracy</span>
     </article>
     <p>${lastAttemptText}</p>
+  `;
+}
+
+function renderWritingLab() {
+  document.querySelector("#writingTitle").textContent = learningData.writing.title;
+  document.querySelector("#writingPrompt").textContent = learningData.writing.prompt;
+  document.querySelector("#writingWordTarget").textContent = learningData.writing.wordTarget;
+  document.querySelector("#writingChecklist").innerHTML = learningData.writing.checklist
+    .map((item) => `<li>${item}</li>`)
+    .join("");
+  document.querySelector("#writingRubric").innerHTML = learningData.writing.rubric
+    .map((item) => `
+      <article class="rubric-card">
+        <strong>${item.name}</strong>
+        <p>${item.description}</p>
+      </article>
+    `).join("");
+
+  const lastWriting = state.progress.writings.at(-1);
+  document.querySelector("#writingInput").value = lastWriting?.draft || "";
+  updateWritingWordCount();
+  renderWritingFeedback(lastWriting);
+}
+
+function updateWritingWordCount() {
+  const draft = document.querySelector("#writingInput").value;
+  const words = countWords(draft);
+  document.querySelector("#writingWordCount").textContent = words;
+  document.querySelector("#writingStatus").textContent = words === 0 ? "Draft" : words < 140 ? "Developing" : "Ready";
+}
+
+function evaluateWritingDraft(draft) {
+  const words = countWords(draft);
+  const lowerDraft = draft.toLowerCase();
+  const hasModal = /(may|might|could|should)\b/.test(lowerDraft);
+  const hasSteps = /(first|next|finally|step|follow up|schedule|clarify)/.test(lowerDraft);
+  const hasProfessionalTone = /(regards|best|thank you|i would|i suggest|i recommend)/.test(lowerDraft);
+  const scores = {
+    Content: words >= 120 && hasSteps ? 4 : words >= 90 ? 3 : 2,
+    Organization: /(dear|hello|hi)/.test(lowerDraft) && /(regards|best)/.test(lowerDraft) ? 4 : words >= 110 ? 3 : 2,
+    Language: hasModal ? 4 : 3,
+    Register: hasProfessionalTone ? 4 : 3
+  };
+  const average = Math.round((Object.values(scores).reduce((sum, value) => sum + value, 0) / 4) * 10) / 10;
+  const strengths = [];
+  const nextSteps = [];
+
+  if (hasModal) {
+    strengths.push("You used modal language to express possibility or recommendation.");
+  } else {
+    nextSteps.push("Add at least one modal such as 'may have' or 'should' to show nuance.");
+  }
+
+  if (hasProfessionalTone) {
+    strengths.push("The tone is appropriately professional for an internal email.");
+  } else {
+    nextSteps.push("Soften the tone with phrases like 'I would suggest' or 'It may be useful to'.");
+  }
+
+  if (words < 140) {
+    nextSteps.push("Develop the message a little more so the task feels complete.");
+  } else {
+    strengths.push("The draft is close to the expected length for this task.");
+  }
+
+  if (!hasSteps) {
+    nextSteps.push("Include two concrete next steps for the manager.");
+  } else {
+    strengths.push("You included action-oriented follow-up ideas.");
+  }
+
+  return { draft, words, scores, average, strengths, nextSteps, createdAt: new Date().toISOString() };
+}
+
+function renderWritingFeedback(result) {
+  const container = document.querySelector("#writingFeedback");
+
+  if (!result) {
+    container.innerHTML = `
+      <article class="lesson-panel">
+        <h3>Feedback</h3>
+        <p>Evalua un borrador para ver puntuacion por criterio, puntos fuertes y siguientes pasos.</p>
+      </article>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <article class="lesson-panel">
+      <p class="eyebrow">Average score</p>
+      <h3>${result.average}/4</h3>
+      <div class="score-grid">
+        ${Object.entries(result.scores).map(([name, score]) => `
+          <article class="score-card">
+            <strong>${score}/4</strong>
+            <span>${name}</span>
+          </article>
+        `).join("")}
+      </div>
+    </article>
+    <article class="lesson-panel">
+      <h3>Strengths</h3>
+      <ul class="feedback-list">
+        ${result.strengths.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+    </article>
+    <article class="lesson-panel">
+      <h3>Next steps</h3>
+      <ul class="feedback-list">
+        ${result.nextSteps.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+    </article>
   `;
 }
 
@@ -322,6 +446,23 @@ function submitExercise(index) {
   renderPracticeSummary();
 }
 
+function saveWritingEvaluation() {
+  const draft = document.querySelector("#writingInput").value.trim();
+
+  if (!draft) {
+    document.querySelector("#writingInput").focus();
+    return;
+  }
+
+  const result = evaluateWritingDraft(draft);
+  state.progress.writings.push(result);
+  saveProgress();
+  renderDashboard();
+  renderRecommendations();
+  renderHistory();
+  renderWritingFeedback(result);
+}
+
 document.addEventListener("click", (event) => {
   const viewLink = event.target.closest("[data-view-link]");
   if (viewLink) {
@@ -342,6 +483,16 @@ document.addEventListener("click", (event) => {
   if (exerciseButton) {
     submitExercise(Number(exerciseButton.dataset.submitExercise));
   }
+
+  if (event.target.id === "evaluateWriting") {
+    saveWritingEvaluation();
+  }
+});
+
+document.addEventListener("input", (event) => {
+  if (event.target.id === "writingInput") {
+    updateWritingWordCount();
+  }
 });
 
 renderDashboard();
@@ -351,5 +502,6 @@ renderPlacement();
 renderPath();
 renderLesson();
 renderExercises();
+renderWritingLab();
 renderReviews();
 renderHistory();

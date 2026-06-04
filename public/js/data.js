@@ -61,6 +61,23 @@ const learningData = {
       "Explain your choice with one clear reason."
     ]
   },
+  writing: {
+    title: "Professional email response",
+    prompt: "You attended an online meeting with a client, but several points were left unclear. Write an email to your manager summarizing what may have caused the confusion and suggesting two next steps.",
+    wordTarget: "140-190 words",
+    checklist: [
+      "Open with the purpose of the email.",
+      "Use diplomatic language when describing the problem.",
+      "Include at least one modal for possibility or recommendation.",
+      "Close with two clear next steps."
+    ],
+    rubric: [
+      { name: "Content", description: "Answers the task and covers the missing points." },
+      { name: "Organization", description: "Has a clear opening, development and closing." },
+      { name: "Language", description: "Uses accurate grammar and useful workplace vocabulary." },
+      { name: "Register", description: "Sounds professional and appropriately diplomatic." }
+    ]
+  },
   exercises: [
     {
       id: "modal-past-possibility",

@@ -22,6 +22,7 @@
         <button class="nav-item" type="button" data-view-link="lesson">Leccion</button>
         <button class="nav-item" type="button" data-view-link="path">Ruta</button>
         <button class="nav-item" type="button" data-view-link="practice">Practica</button>
+        <button class="nav-item" type="button" data-view-link="writing">Writing</button>
         <button class="nav-item" type="button" data-view-link="review">Repaso</button>
       </nav>
     </aside>
@@ -162,6 +163,51 @@
         </div>
         <div class="practice-summary" id="practiceSummary"></div>
         <div class="exercise-grid" id="exerciseGrid"></div>
+      </section>
+
+      <section class="view" id="writing" data-view="writing">
+        <div class="section-heading">
+          <p class="eyebrow">Writing lab</p>
+          <h2 id="writingTitle">Professional email response</h2>
+          <p id="writingPrompt"></p>
+        </div>
+
+        <div class="writing-layout">
+          <article class="lesson-panel">
+            <div class="writing-meta">
+              <article class="writing-mini-card">
+                <strong id="writingWordTarget">140-190 words</strong>
+                <span>target</span>
+              </article>
+              <article class="writing-mini-card">
+                <strong id="writingWordCount">0</strong>
+                <span>words</span>
+              </article>
+              <article class="writing-mini-card">
+                <strong id="writingStatus">Draft</strong>
+                <span>status</span>
+              </article>
+            </div>
+
+            <label class="answer-field writing-field">
+              <span>Your draft</span>
+              <textarea id="writingInput" rows="12" placeholder="Write your response here..."></textarea>
+            </label>
+
+            <div class="writing-actions">
+              <button class="primary-action" type="button" id="evaluateWriting">Evaluate writing</button>
+            </div>
+          </article>
+
+          <aside class="lesson-panel checklist-panel">
+            <h3>Checklist</h3>
+            <ul id="writingChecklist"></ul>
+            <h3>Rubric</h3>
+            <div class="rubric-grid" id="writingRubric"></div>
+          </aside>
+        </div>
+
+        <div class="writing-feedback-panel" id="writingFeedback"></div>
       </section>
 
       <section class="view" id="review" data-view="review">

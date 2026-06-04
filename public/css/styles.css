@@ -266,6 +266,12 @@ h2 {
   gap: 16px;
 }
 
+.writing-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 16px;
+}
+
 .lesson-block {
   margin-top: 24px;
   padding-top: 18px;
@@ -380,6 +386,19 @@ h2 {
   font: inherit;
 }
 
+.writing-field textarea {
+  width: 100%;
+  min-height: 260px;
+  padding: 14px 16px;
+  color: var(--ink);
+  resize: vertical;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  line-height: 1.6;
+}
+
 .feedback {
   position: relative;
   padding-top: 14px;
@@ -445,6 +464,63 @@ h2 {
 
 .practice-summary p {
   margin-bottom: 0;
+}
+
+.writing-meta,
+.score-grid,
+.rubric-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.writing-meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.writing-mini-card,
+.score-card,
+.rubric-card {
+  padding: 16px;
+  background: rgba(255, 253, 247, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.writing-mini-card strong,
+.score-card strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.writing-mini-card span,
+.score-card span,
+.rubric-card p {
+  color: var(--muted);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.rubric-grid,
+.score-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.writing-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.writing-feedback-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.feedback-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
 }
 
 .recommendation-list,
@@ -558,8 +634,14 @@ h2 {
   .review-grid,
   .lesson-layout,
   .dashboard-columns,
-  .review-overview {
+  .review-overview,
+  .writing-layout,
+  .writing-feedback-panel {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .writing-meta {
+    grid-template-columns: 1fr;
   }
 
   .session-strip,
@@ -583,7 +665,12 @@ h2 {
   .lesson-layout,
   .compact-grid,
   .dashboard-columns,
-  .review-overview {
+  .review-overview,
+  .writing-layout,
+  .writing-feedback-panel,
+  .rubric-grid,
+  .score-grid,
+  .writing-meta {
     grid-template-columns: 1fr;
   }
 
