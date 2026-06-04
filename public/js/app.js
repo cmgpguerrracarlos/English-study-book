@@ -1,8 +1,10 @@
 const STORAGE_KEY = "english-study-progress";
+const THEME_KEY = "english-study-theme";
 
 const state = {
   placementAnswers: new Map(),
   progress: loadProgress(),
+  theme: loadTheme(),
   practiceFilters: {
     skill: "All",
     topic: "All"
@@ -23,6 +25,39 @@ function loadProgress() {
 
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+}
+
+function loadTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || "light";
+  } catch (error) {
+    return "light";
+  }
+}
+
+function saveTheme() {
+  localStorage.setItem(THEME_KEY, state.theme);
+}
+
+function applyTheme() {
+  document.body.dataset.theme = state.theme;
+  const toggle = document.querySelector("#themeToggle");
+  const label = document.querySelector("#themeToggleLabel");
+  const isDark = state.theme === "dark";
+
+  if (toggle) {
+    toggle.setAttribute("aria-pressed", String(isDark));
+  }
+
+  if (label) {
+    label.textContent = isDark ? "Light mode" : "Dark mode";
+  }
+}
+
+function toggleTheme() {
+  state.theme = state.theme === "dark" ? "light" : "dark";
+  saveTheme();
+  applyTheme();
 }
 
 function normalizeAnswer(value) {
@@ -616,6 +651,10 @@ document.addEventListener("click", (event) => {
   if (event.target.id === "submitPlacement") {
     updatePlacementResult();
   }
+
+  if (event.target.id === "themeToggle" || event.target.closest("#themeToggle")) {
+    toggleTheme();
+  }
 });
 
 document.addEventListener("input", (event) => {
@@ -638,6 +677,7 @@ document.addEventListener("input", (event) => {
   }
 });
 
+applyTheme();
 renderDashboard();
 renderSkills();
 renderRecommendations();
