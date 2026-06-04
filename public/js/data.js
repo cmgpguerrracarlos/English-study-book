@@ -48,27 +48,75 @@ const learningData = {
       status: "Locked"
     }
   ],
+  lesson: {
+    title: "Modal verbs for nuance",
+    level: "B2",
+    goal: "Use modal verbs to sound precise when discussing past situations and professional decisions.",
+    focus: "Use may have, might have and could have for possible past explanations. Use should have for regret or criticism, and would have for unreal past results.",
+    teacherNote: "At B2, the challenge is not knowing the modal verb; it is choosing the meaning. Ask: am I showing possibility, advice, regret or an unreal result?",
+    checklist: [
+      "Identify the meaning before choosing the modal.",
+      "Use modal + have + past participle for past meanings.",
+      "Avoid translating Spanish structures word by word.",
+      "Explain your choice with one clear reason."
+    ]
+  },
   exercises: [
     {
+      id: "modal-past-possibility",
       type: "Sentence transformation",
+      skill: "Grammar",
+      topic: "modals",
+      difficulty: "B2",
       prompt: "Rewrite: It is possible that she forgot the deadline.",
       answer: "She may have forgotten the deadline.",
+      acceptedAnswers: [
+        "she may have forgotten the deadline",
+        "she might have forgotten the deadline",
+        "she could have forgotten the deadline"
+      ],
       explanation: "'May have + past participle' expresses a possible explanation about the past.",
-      mistake: "Using 'may forgot' misses the perfect form after modal verbs."
+      mistake: "Using 'may forgot' misses the perfect form after modal verbs.",
+      example: "He might have missed the train because the meeting ran late."
     },
     {
+      id: "agree-error-correction",
       type: "Error correction",
+      skill: "Grammar",
+      topic: "verb patterns",
+      difficulty: "B1+",
       prompt: "Correct: I am agree with your suggestion.",
       answer: "I agree with your suggestion.",
+      acceptedAnswers: ["i agree with your suggestion"],
       explanation: "'Agree' is a main verb, so it does not need 'am'.",
-      mistake: "Spanish speakers often transfer 'estar de acuerdo' directly."
+      mistake: "Spanish speakers often transfer 'estar de acuerdo' directly.",
+      example: "I agree with the proposal, but I would change the timeline."
     },
     {
+      id: "progress-collocation",
       type: "Vocabulary",
+      skill: "Vocabulary",
+      topic: "collocations",
+      difficulty: "B1+",
       prompt: "Choose a natural collocation: make / do / take progress",
       answer: "make progress",
+      acceptedAnswers: ["make progress"],
       explanation: "English uses 'make progress' as a fixed collocation.",
-      mistake: "'Do progress' is understandable but unnatural."
+      mistake: "'Do progress' is understandable but unnatural.",
+      example: "You have made clear progress with your writing this month."
+    },
+    {
+      id: "hedging-choice",
+      type: "Professional English",
+      skill: "Writing",
+      topic: "hedging",
+      difficulty: "B2",
+      prompt: "Choose the best phrase for a diplomatic email: 'You are wrong' / 'I see it slightly differently'",
+      answer: "I see it slightly differently",
+      acceptedAnswers: ["i see it slightly differently"],
+      explanation: "Hedging softens disagreement while keeping the message clear and professional.",
+      mistake: "Direct disagreement can sound harsher than intended in professional English.",
+      example: "I see it slightly differently, and I think the second option may be more realistic."
     }
   ],
   reviews: [

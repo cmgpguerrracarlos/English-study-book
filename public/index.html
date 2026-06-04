@@ -19,6 +19,7 @@
       <nav class="nav-list">
         <button class="nav-item is-active" type="button" data-view-link="dashboard">Dashboard</button>
         <button class="nav-item" type="button" data-view-link="placement">Diagnostico</button>
+        <button class="nav-item" type="button" data-view-link="lesson">Leccion</button>
         <button class="nav-item" type="button" data-view-link="path">Ruta</button>
         <button class="nav-item" type="button" data-view-link="practice">Practica</button>
         <button class="nav-item" type="button" data-view-link="review">Repaso</button>
@@ -47,16 +48,36 @@
           </article>
 
           <article class="metric-card">
-            <span class="metric-value">68%</span>
+            <span class="metric-value" id="accuracyMetric">68%</span>
             <p>Grammar accuracy</p>
           </article>
+          <article class="metric-card">
+            <span class="metric-value" id="attemptsMetric">0</span>
+            <p>Attempts completed</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value" id="reviewMetric">7</span>
+            <p>Errors to review</p>
+          </article>
+        </div>
+
+        <div class="session-strip">
+          <div>
+            <p class="eyebrow">Recommended next</p>
+            <h2 id="nextLessonTitle">Modal verbs for nuance</h2>
+            <p id="nextLessonGoal">Practice possible past explanations and professional hedging.</p>
+          </div>
+          <button class="primary-action" type="button" data-view-link="lesson">Open lesson</button>
+        </div>
+
+        <div class="dashboard-grid compact-grid">
           <article class="metric-card">
             <span class="metric-value">41</span>
             <p>Words retained</p>
           </article>
           <article class="metric-card">
-            <span class="metric-value">7</span>
-            <p>Errors to review</p>
+            <span class="metric-value" id="streakMetric">1</span>
+            <p>Study streak</p>
           </article>
         </div>
 
@@ -65,6 +86,32 @@
           <p>El sistema prioriza lo que mas impacto tiene en fluidez real.</p>
         </div>
         <div class="skills-grid" id="skillCards"></div>
+      </section>
+
+      <section class="view" id="lesson" data-view="lesson">
+        <div class="lesson-layout">
+          <article class="lesson-panel">
+            <p class="eyebrow" id="lessonLevel">B2 lesson</p>
+            <h2 id="lessonTitle">Modal verbs for nuance</h2>
+            <p id="lessonGoal">Express probability, advice and obligation naturally.</p>
+
+            <div class="lesson-block">
+              <h3>Language focus</h3>
+              <p id="lessonFocus"></p>
+            </div>
+
+            <div class="lesson-block">
+              <h3>Teacher note</h3>
+              <p id="lessonTeacherNote"></p>
+            </div>
+          </article>
+
+          <aside class="lesson-panel checklist-panel">
+            <h3>Session checklist</h3>
+            <ul id="lessonChecklist"></ul>
+            <button class="primary-action" type="button" data-view-link="practice">Start guided practice</button>
+          </aside>
+        </div>
       </section>
 
       <section class="view" id="placement" data-view="placement">
@@ -93,8 +140,9 @@
         <div class="section-heading">
           <p class="eyebrow">Practice lab</p>
           <h2>Ejercicios guiados</h2>
-          <p>Feedback con explicacion, error comun y ejemplo adicional.</p>
+          <p>Responde, revisa feedback y guarda progreso real por habilidad.</p>
         </div>
+        <div class="practice-summary" id="practiceSummary"></div>
         <div class="exercise-grid" id="exerciseGrid"></div>
       </section>
 
