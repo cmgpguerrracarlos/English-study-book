@@ -2,7 +2,11 @@ const STORAGE_KEY = "english-study-progress";
 
 const state = {
   placementAnswers: new Map(),
-  progress: loadProgress()
+  progress: loadProgress(),
+  practiceFilters: {
+    skill: "All",
+    topic: "All"
+  }
 };
 
 const views = document.querySelectorAll("[data-view]");
@@ -199,6 +203,26 @@ function updatePlacementResult() {
 
 function renderPath() {
   const container = document.querySelector("#studyPath");
+  const overview = document.querySelector("#pathOverview");
+  const readyCount = learningData.path.filter((unit) => unit.status === "Ready" || unit.status === "Recommended").length;
+  const b2Count = learningData.path.filter((unit) => unit.level === "B2").length;
+  const c1Count = learningData.path.filter((unit) => unit.level === "C1").length;
+
+  overview.innerHTML = `
+    <article>
+      <strong>${learningData.path.length}</strong>
+      <span>units</span>
+    </article>
+    <article>
+      <strong>${readyCount}</strong>
+      <span>open now</span>
+    </article>
+    <article>
+      <strong>${b2Count + c1Count}</strong>
+      <span>B2-C1 focus</span>
+    </article>
+  `;
+
   container.innerHTML = learningData.path.map((unit, index) => `
     <article class="path-item">
       <span class="path-index">${index + 1}</span>
@@ -222,9 +246,56 @@ function renderLesson() {
     .join("");
 }
 
+function getFilteredExercises() {
+  return learningData.exercises.filter((exercise) => {
+    const skillMatch = state.practiceFilters.skill === "All" || exercise.skill === state.practiceFilters.skill;
+    const topicMatch = state.practiceFilters.topic === "All" || exercise.topic === state.practiceFilters.topic;
+    return skillMatch && topicMatch;
+  });
+}
+
+function renderPracticeFilters() {
+  const skillSelect = document.querySelector("#practiceSkillFilter");
+  const topicSelect = document.querySelector("#practiceTopicFilter");
+  const skills = ["All", ...new Set(learningData.exercises.map((exercise) => exercise.skill))];
+  const topics = ["All", ...new Set(learningData.exercises.map((exercise) => exercise.topic))];
+
+  skillSelect.innerHTML = skills.map((skill) => `
+    <option value="${skill}" ${skill === state.practiceFilters.skill ? "selected" : ""}>${skill}</option>
+  `).join("");
+
+  topicSelect.innerHTML = topics.map((topic) => `
+    <option value="${topic}" ${topic === state.practiceFilters.topic ? "selected" : ""}>${topic}</option>
+  `).join("");
+}
+
 function renderExercises() {
   const container = document.querySelector("#exerciseGrid");
-  container.innerHTML = learningData.exercises.map((exercise, index) => `
+  const catalog = document.querySelector("#practiceCatalog");
+  const filteredExercises = getFilteredExercises();
+  const totalSkills = new Set(learningData.exercises.map((exercise) => exercise.skill)).size;
+  const totalTopics = new Set(learningData.exercises.map((exercise) => exercise.topic)).size;
+
+  renderPracticeFilters();
+
+  catalog.innerHTML = `
+    <article>
+      <strong>${learningData.exercises.length}</strong>
+      <span>total tasks</span>
+    </article>
+    <article>
+      <strong>${filteredExercises.length}</strong>
+      <span>visible now</span>
+    </article>
+    <article>
+      <strong>${totalSkills}/${totalTopics}</strong>
+      <span>skills/topics</span>
+    </article>
+  `;
+
+  container.innerHTML = filteredExercises.map((exercise) => {
+    const index = learningData.exercises.indexOf(exercise);
+    return `
     <article class="exercise-card">
       <p class="eyebrow">${exercise.type} - ${exercise.difficulty}</p>
       <h3>${exercise.prompt}</h3>
@@ -240,7 +311,8 @@ function renderExercises() {
         <em>Example: ${exercise.example}</em>
       </div>
     </article>
-  `).join("");
+  `;
+  }).join("");
 
   renderPracticeSummary();
 }
@@ -262,7 +334,7 @@ function renderReviews() {
 
   container.innerHTML = cards.map((card) => `
     <article class="review-card">
-      <span>${card.tag} · ${card.due}</span>
+      <span>${card.tag} - ${card.due}</span>
       <h3>${card.front}</h3>
       <p>${card.back}</p>
     </article>
@@ -324,7 +396,7 @@ function renderHistory() {
         <span class="${attempt.isCorrect ? "status-ok" : "status-review"}">${attempt.isCorrect ? "Correct" : "Review"}</span>
       </div>
       <p>${attempt.prompt}</p>
-      <small>${new Date(attempt.createdAt).toLocaleDateString("es-UY")} · ${attempt.topic}</small>
+      <small>${new Date(attempt.createdAt).toLocaleDateString("es-UY")} - ${attempt.topic}</small>
     </article>
   `).join("");
 }
@@ -553,6 +625,16 @@ document.addEventListener("input", (event) => {
 
   if (event.target.matches("[data-placement-text]")) {
     state.placementAnswers.set(Number(event.target.dataset.placementText), event.target.value);
+  }
+
+  if (event.target.id === "practiceSkillFilter") {
+    state.practiceFilters.skill = event.target.value;
+    renderExercises();
+  }
+
+  if (event.target.id === "practiceTopicFilter") {
+    state.practiceFilters.topic = event.target.value;
+    renderExercises();
   }
 });
 

@@ -95,6 +95,30 @@ const learningData = {
       level: "B2",
       goal: "Structure professional messages with the right register.",
       status: "Locked"
+    },
+    {
+      title: "Reading for inference",
+      level: "B2",
+      goal: "Read beyond explicit meaning and track author intention.",
+      status: "Locked"
+    },
+    {
+      title: "Meetings and negotiation language",
+      level: "B2",
+      goal: "Manage agreement, hesitation and proposals more naturally.",
+      status: "Locked"
+    },
+    {
+      title: "Advanced connectors and argument flow",
+      level: "C1",
+      goal: "Link ideas with precision in essays and presentations.",
+      status: "Stretch"
+    },
+    {
+      title: "Error clinic for Spanish speakers",
+      level: "B2",
+      goal: "Correct transfer errors in grammar, collocation and register.",
+      status: "Recommended"
     }
   ],
   lesson: {
@@ -183,6 +207,95 @@ const learningData = {
       explanation: "Hedging softens disagreement while keeping the message clear and professional.",
       mistake: "Direct disagreement can sound harsher than intended in professional English.",
       example: "I see it slightly differently, and I think the second option may be more realistic."
+    },
+    {
+      id: "reading-inference-delay",
+      type: "Reading inference",
+      skill: "Reading",
+      topic: "inference",
+      difficulty: "B2",
+      prompt: "A manager writes: 'We are enthusiastic about the proposal, although we need more time before making a final commitment.' What is the most likely meaning?",
+      answer: "They are interested but not ready to say yes yet.",
+      acceptedAnswers: [
+        "they are interested but not ready to say yes yet",
+        "they are interested but not ready to commit yet"
+      ],
+      explanation: "The writer signals positive interest while delaying a firm decision.",
+      mistake: "Learners often read positive adjectives and ignore the limiting clause.",
+      example: "The client sounds open, but still cautious."
+    },
+    {
+      id: "connector-contrast",
+      type: "Grammar in context",
+      skill: "Grammar",
+      topic: "connectors",
+      difficulty: "B2",
+      prompt: "Complete: The report was clear; ___, the conclusions were not fully supported by data.",
+      answer: "however",
+      acceptedAnswers: ["however"],
+      explanation: "'However' introduces a contrast between two related ideas.",
+      mistake: "Using 'although' in the middle of the sentence would require a different structure.",
+      example: "The design is elegant; however, the flow still feels slow."
+    },
+    {
+      id: "meeting-collocation",
+      type: "Workplace vocabulary",
+      skill: "Vocabulary",
+      topic: "meetings",
+      difficulty: "B2",
+      prompt: "Choose the natural phrase: We need to ___ a decision before Friday.",
+      answer: "reach",
+      acceptedAnswers: ["reach"],
+      explanation: "In professional English, we usually 'reach a decision'.",
+      mistake: "'Take a decision' exists in some varieties, but 'reach a decision' is the safest high-frequency option.",
+      example: "We should reach a decision after reviewing the feedback."
+    },
+    {
+      id: "register-rewrite",
+      type: "Register shift",
+      skill: "Writing",
+      topic: "register",
+      difficulty: "B2",
+      prompt: "Rewrite in a more professional tone: 'Send me the file today.'",
+      answer: "Could you send me the file today?",
+      acceptedAnswers: [
+        "could you send me the file today",
+        "could you please send me the file today",
+        "would you mind sending me the file today"
+      ],
+      explanation: "Professional requests are usually softened with modal forms.",
+      mistake: "Direct imperatives can sound abrupt in workplace communication.",
+      example: "Could you send me the revised draft by the end of the day?"
+    },
+    {
+      id: "phrasal-verb-follow-up",
+      type: "Phrasal verbs",
+      skill: "Vocabulary",
+      topic: "phrasal verbs",
+      difficulty: "B1+",
+      prompt: "Complete: I will ___ with the client tomorrow to confirm the schedule.",
+      answer: "follow up",
+      acceptedAnswers: ["follow up"],
+      explanation: "'Follow up' means to contact someone again about a previous issue.",
+      mistake: "Learners often confuse it with 'continue' in contexts where contact is the key idea.",
+      example: "Let's follow up after the meeting to clarify the budget."
+    },
+    {
+      id: "reading-purpose",
+      type: "Reading strategy",
+      skill: "Reading",
+      topic: "purpose",
+      difficulty: "B2",
+      prompt: "If the first paragraph introduces the problem and the second gives evidence, what is the most likely purpose of the third paragraph?",
+      answer: "to suggest a response or conclusion",
+      acceptedAnswers: [
+        "to suggest a response or conclusion",
+        "to give a conclusion",
+        "to suggest a solution"
+      ],
+      explanation: "Well-structured argumentative texts often move from issue to evidence to response.",
+      mistake: "Some learners focus on sentence-level meaning and miss paragraph function.",
+      example: "When reading longer texts, track the role of each paragraph."
     }
   ],
   reviews: [
