@@ -117,30 +117,84 @@ function renderRecommendations() {
 
 function renderPlacement() {
   const container = document.querySelector("#placementQuestions");
-  container.innerHTML = learningData.placement.map((item, questionIndex) => `
-    <article class="question-card">
-      <h3>${item.question}</h3>
-      <div class="option-list">
-        ${item.options.map((option) => `
-          <button type="button" data-question="${questionIndex}" data-answer="${option}">${option}</button>
-        `).join("")}
-      </div>
-    </article>
-  `).join("");
+  const sections = [...new Set(learningData.placement.map((item) => item.section))];
+
+  container.innerHTML = sections.map((section) => {
+    const items = learningData.placement.filter((item) => item.section === section);
+    return `
+      <section class="placement-section">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">${section}</p>
+        </div>
+        ${items.map((item) => {
+          const questionIndex = learningData.placement.indexOf(item);
+          if (item.type === "text") {
+            return `
+              <article class="question-card">
+                <h3>${item.question}</h3>
+                <label class="answer-field">
+                  <span>Answer</span>
+                  <input type="text" data-placement-text="${questionIndex}" placeholder="Write a short answer">
+                </label>
+              </article>
+            `;
+          }
+
+          return `
+            <article class="question-card">
+              <h3>${item.question}</h3>
+              <div class="option-list">
+                ${item.options.map((option) => `
+                  <button type="button" data-question="${questionIndex}" data-answer="${option}">${option}</button>
+                `).join("")}
+              </div>
+            </article>
+          `;
+        }).join("")}
+      </section>
+    `;
+  }).join("");
 }
 
 function updatePlacementResult() {
   const total = learningData.placement.length;
-  const correct = learningData.placement.filter((item, index) => state.placementAnswers.get(index) === item.answer).length;
+  const entries = learningData.placement.map((item, index) => {
+    const rawAnswer = state.placementAnswers.get(index);
+    const normalizedRawAnswer = rawAnswer ? normalizeAnswer(rawAnswer) : "";
+    const expectedAnswers = item.acceptedAnswers ? item.acceptedAnswers.map(normalizeAnswer) : [normalizeAnswer(item.answer)];
+    return {
+      ...item,
+      isCorrect: expectedAnswers.includes(normalizedRawAnswer)
+    };
+  });
+  const answered = entries.filter((item, index) => state.placementAnswers.has(index)).length;
+  const correct = entries.filter((item) => item.isCorrect).length;
   const result = document.querySelector("#placementResult");
+  const summary = document.querySelector("#placementSkillSummary");
 
-  if (state.placementAnswers.size < total) {
-    result.textContent = `${state.placementAnswers.size}/${total} preguntas respondidas.`;
+  if (answered < total) {
+    result.textContent = `${answered}/${total} preguntas respondidas.`;
+    summary.innerHTML = "";
     return;
   }
 
-  const level = correct >= 3 ? "B2" : correct === 2 ? "B1+" : "B1";
-  result.textContent = `Nivel estimado: ${level}. Recomendacion: empezar con Modal verbs for nuance y Error correction clinic.`;
+  const skills = ["Grammar", "Vocabulary", "Reading", "Writing"];
+  const skillScores = skills.map((skill) => {
+    const items = entries.filter((item) => item.skill === skill);
+    const score = Math.round((items.filter((item) => item.isCorrect).length / items.length) * 100);
+    return { skill, score };
+  });
+  const average = Math.round(skillScores.reduce((sum, item) => sum + item.score, 0) / skillScores.length);
+  const level = average >= 85 ? "C1" : average >= 65 ? "B2" : average >= 45 ? "B1+" : "B1";
+  const weakestSkill = [...skillScores].sort((left, right) => left.score - right.score)[0];
+
+  summary.innerHTML = skillScores.map((item) => `
+    <article>
+      <strong>${item.score}%</strong>
+      <span>${item.skill}</span>
+    </article>
+  `).join("");
+  result.textContent = `Nivel estimado: ${level}. Skill prioritaria: ${weakestSkill.skill}. Ruta recomendada: ${level === "C1" ? "Advanced precision path" : level === "B2" ? "Fluency Builder B2" : "Bridge to B2"}.`;
 }
 
 function renderPath() {
@@ -476,7 +530,6 @@ document.addEventListener("click", (event) => {
     siblings.forEach((button) => button.classList.remove("is-selected"));
     placementOption.classList.add("is-selected");
     state.placementAnswers.set(questionIndex, placementOption.dataset.answer);
-    updatePlacementResult();
   }
 
   const exerciseButton = event.target.closest("[data-submit-exercise]");
@@ -487,11 +540,19 @@ document.addEventListener("click", (event) => {
   if (event.target.id === "evaluateWriting") {
     saveWritingEvaluation();
   }
+
+  if (event.target.id === "submitPlacement") {
+    updatePlacementResult();
+  }
 });
 
 document.addEventListener("input", (event) => {
   if (event.target.id === "writingInput") {
     updateWritingWordCount();
+  }
+
+  if (event.target.matches("[data-placement-text]")) {
+    state.placementAnswers.set(Number(event.target.dataset.placementText), event.target.value);
   }
 });
 

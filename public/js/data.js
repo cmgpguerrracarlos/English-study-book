@@ -7,19 +7,68 @@ const learningData = {
   ],
   placement: [
     {
+      section: "Grammar",
+      type: "choice",
       question: "Choose the best option: If I had known about the meeting, I ___ earlier.",
       options: ["would have arrived", "would arrive", "arrived"],
-      answer: "would have arrived"
+      answer: "would have arrived",
+      skill: "Grammar"
     },
     {
+      section: "Grammar",
+      type: "text",
+      question: "Complete the sentence with one modal phrase: She ___ forgotten the attachment, because the email was sent in a rush.",
+      acceptedAnswers: ["may have", "might have", "could have"],
+      answer: "may have",
+      skill: "Grammar"
+    },
+    {
+      section: "Vocabulary",
+      type: "choice",
       question: "Which phrase sounds most natural in a professional email?",
       options: ["I am writing to follow up on...", "I write for follow...", "I am write because..."],
-      answer: "I am writing to follow up on..."
+      answer: "I am writing to follow up on...",
+      skill: "Vocabulary"
     },
     {
+      section: "Vocabulary",
+      type: "choice",
       question: "What does 'to bring up a topic' mean?",
       options: ["to mention it", "to forget it", "to finish it"],
-      answer: "to mention it"
+      answer: "to mention it",
+      skill: "Vocabulary"
+    },
+    {
+      section: "Reading",
+      type: "choice",
+      question: "Read the sentence: 'Although the proposal seemed promising, the team postponed the launch due to unresolved technical risks.' Why was the launch postponed?",
+      options: ["The proposal was rejected immediately", "There were still technical issues", "The team had no budget"],
+      answer: "There were still technical issues",
+      skill: "Reading"
+    },
+    {
+      section: "Reading",
+      type: "text",
+      question: "One-word reading task: In the sentence 'Her tone was hesitant, but she eventually agreed', was she confident or unsure?",
+      acceptedAnswers: ["unsure"],
+      answer: "unsure",
+      skill: "Reading"
+    },
+    {
+      section: "Writing",
+      type: "choice",
+      question: "Which opening is more appropriate for a message to your manager?",
+      options: ["Hey, I need to tell you something", "I am writing to update you on the client meeting", "Listen, there is a problem"],
+      answer: "I am writing to update you on the client meeting",
+      skill: "Writing"
+    },
+    {
+      section: "Writing",
+      type: "text",
+      question: "Write one diplomatic linker to introduce a suggestion in a professional email.",
+      acceptedAnswers: ["i would suggest", "it may be useful to", "i recommend"],
+      answer: "I would suggest",
+      skill: "Writing"
     }
   ],
   path: [

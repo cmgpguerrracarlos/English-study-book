@@ -226,6 +226,10 @@ h2 {
   margin: 36px 0 18px;
 }
 
+.compact-heading {
+  margin: 0 0 12px;
+}
+
 .session-strip {
   display: flex;
   gap: 18px;
@@ -325,6 +329,19 @@ h2 {
 .path-list {
   display: grid;
   gap: 14px;
+}
+
+.placement-section {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: rgba(255, 253, 247, 0.52);
+  border: 1px solid rgba(221, 214, 199, 0.7);
+  border-radius: 8px;
+}
+
+.placement-actions {
+  margin: 18px 0 12px;
 }
 
 .option-list {
