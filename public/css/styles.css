@@ -1,0 +1,398 @@
+:root {
+  --ink: #17201d;
+  --muted: #66706b;
+  --paper: #f7f4ec;
+  --panel: #fffdf7;
+  --line: #ddd6c7;
+  --teal: #166d68;
+  --blue: #386fa4;
+  --green: #2f7d4f;
+  --amber: #b86b21;
+  --red: #a84a45;
+  --shadow: 0 18px 50px rgba(23, 32, 29, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    linear-gradient(120deg, rgba(22, 109, 104, 0.12), transparent 35%),
+    radial-gradient(circle at 90% 10%, rgba(184, 107, 33, 0.16), transparent 28%),
+    var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+button {
+  font: inherit;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  padding: 28px 22px;
+  background: rgba(255, 253, 247, 0.82);
+  border-right: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  color: #fff;
+  background: var(--teal);
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.brand small,
+.eyebrow {
+  display: block;
+  color: var(--muted);
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 38px;
+}
+
+.nav-item {
+  width: 100%;
+  padding: 12px 14px;
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.nav-item:hover,
+.nav-item.is-active {
+  color: var(--ink);
+  background: #fff;
+  border-color: var(--line);
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 300px));
+  margin-left: 260px;
+  padding: 32px 40px 56px;
+}
+
+.topbar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  line-height: 0.95;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+.profile-pill,
+.metric-card,
+.skill-card,
+.question-card,
+.path-item,
+.exercise-card,
+.review-card,
+.result-panel {
+  background: rgba(255, 253, 247, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.profile-pill {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.profile-pill span {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: #fff;
+  background: var(--teal);
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.view {
+  display: none;
+}
+
+.view.is-visible {
+  display: block;
+  animation: rise 420ms ease both;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 16px;
+}
+
+.hero-panel {
+  min-height: 260px;
+  padding: 30px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(12, 41, 38, 0.92), rgba(22, 109, 104, 0.78)),
+    url("https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80");
+  background-position: center;
+  background-size: cover;
+  border-radius: 8px;
+}
+
+.hero-panel p {
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.primary-action,
+.exercise-card button,
+.option-list button {
+  padding: 11px 16px;
+  color: #fff;
+  cursor: pointer;
+  background: var(--teal);
+  border: 0;
+  border-radius: 8px;
+}
+
+.metric-card {
+  display: grid;
+  align-content: end;
+  min-height: 260px;
+  padding: 22px;
+}
+
+.metric-value {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.section-heading {
+  max-width: 720px;
+  margin: 36px 0 18px;
+}
+
+.skills-grid,
+.exercise-grid,
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.skill-card,
+.question-card,
+.exercise-card,
+.review-card,
+.result-panel {
+  padding: 20px;
+}
+
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-track {
+  height: 9px;
+  margin: 14px 0;
+  overflow: hidden;
+  background: #e9e1d2;
+  border-radius: 999px;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: var(--teal);
+}
+
+.tone-blue .progress-track span {
+  background: var(--blue);
+}
+
+.tone-green .progress-track span {
+  background: var(--green);
+}
+
+.tone-amber .progress-track span {
+  background: var(--amber);
+}
+
+.tone-red .progress-track span {
+  background: var(--red);
+}
+
+.assessment-panel,
+.path-list {
+  display: grid;
+  gap: 14px;
+}
+
+.option-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.option-list button {
+  background: #2d5b58;
+}
+
+.option-list button.is-selected {
+  background: var(--amber);
+}
+
+.result-panel {
+  margin-top: 18px;
+}
+
+.path-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 20px;
+}
+
+.path-index {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: #fff;
+  background: var(--ink);
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.exercise-card button {
+  margin-bottom: 14px;
+}
+
+.feedback {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.feedback small,
+.review-card span {
+  color: var(--muted);
+  font-family: "Segoe UI", sans-serif;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 920px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    padding: 18px;
+  }
+
+  .nav-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 18px;
+  }
+
+  .nav-item {
+    text-align: center;
+  }
+
+  .app-shell {
+    width: 100%;
+    margin-left: 0;
+    padding: 22px;
+  }
+
+  .topbar,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid,
+  .skills-grid,
+  .exercise-grid,
+  .review-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .metric-card {
+    min-height: 150px;
+  }
+}
+
+@media (max-width: 620px) {
+  .nav-list,
+  .dashboard-grid,
+  .skills-grid,
+  .exercise-grid,
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+}

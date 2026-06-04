@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>English Study Book</title>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <aside class="sidebar" aria-label="Navegacion principal">
+      <a class="brand" href="#dashboard" data-view-link="dashboard">
+        <span class="brand-mark">ES</span>
+        <span>
+          <strong>English Study</strong>
+          <small>B1+ to C1</small>
+        </span>
+      </a>
+
+      <nav class="nav-list">
+        <button class="nav-item is-active" type="button" data-view-link="dashboard">Dashboard</button>
+        <button class="nav-item" type="button" data-view-link="placement">Diagnostico</button>
+        <button class="nav-item" type="button" data-view-link="path">Ruta</button>
+        <button class="nav-item" type="button" data-view-link="practice">Practica</button>
+        <button class="nav-item" type="button" data-view-link="review">Repaso</button>
+      </nav>
+    </aside>
+
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Plan personalizado</p>
+          <h1>Fluency Builder</h1>
+        </div>
+        <div class="profile-pill">
+          <span>B2</span>
+          <strong>Goal: Work & exams</strong>
+        </div>
+      </section>
+
+      <section class="view is-visible" id="dashboard" data-view="dashboard">
+        <div class="dashboard-grid">
+          <article class="hero-panel">
+            <p class="eyebrow">Today</p>
+            <h2>Speak and write with more precision</h2>
+            <p>Una sesion corta para reforzar modal verbs, collocations y respuestas argumentadas.</p>
+            <button class="primary-action" type="button" data-view-link="practice">Start practice</button>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-value">68%</span>
+            <p>Grammar accuracy</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">41</span>
+            <p>Words retained</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">7</span>
+            <p>Errors to review</p>
+          </article>
+        </div>
+
+        <div class="section-heading">
+          <h2>Skill focus</h2>
+          <p>El sistema prioriza lo que mas impacto tiene en fluidez real.</p>
+        </div>
+        <div class="skills-grid" id="skillCards"></div>
+      </section>
+
+      <section class="view" id="placement" data-view="placement">
+        <div class="section-heading">
+          <p class="eyebrow">Placement</p>
+          <h2>Diagnostico inicial</h2>
+          <p>Evalua gramatica, vocabulario, lectura y escritura breve para ubicar al estudiante.</p>
+        </div>
+        <div class="assessment-panel" id="placementQuestions"></div>
+        <div class="result-panel">
+          <h3>Resultado estimado</h3>
+          <p id="placementResult">Completa las preguntas para calcular una recomendacion inicial.</p>
+        </div>
+      </section>
+
+      <section class="view" id="path" data-view="path">
+        <div class="section-heading">
+          <p class="eyebrow">Study path</p>
+          <h2>Ruta B1+/B2</h2>
+          <p>Unidades pensadas para pasar de conocimiento pasivo a uso preciso.</p>
+        </div>
+        <div class="path-list" id="studyPath"></div>
+      </section>
+
+      <section class="view" id="practice" data-view="practice">
+        <div class="section-heading">
+          <p class="eyebrow">Practice lab</p>
+          <h2>Ejercicios guiados</h2>
+          <p>Feedback con explicacion, error comun y ejemplo adicional.</p>
+        </div>
+        <div class="exercise-grid" id="exerciseGrid"></div>
+      </section>
+
+      <section class="view" id="review" data-view="review">
+        <div class="section-heading">
+          <p class="eyebrow">Review center</p>
+          <h2>Repaso inteligente</h2>
+          <p>Tarjetas basadas en vocabulario, collocations y errores frecuentes.</p>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </section>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
