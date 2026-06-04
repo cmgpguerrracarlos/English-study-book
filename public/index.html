@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
-    <aside class="sidebar" aria-label="Navegacion principal">
+    <button class="mobile-nav-toggle" type="button" id="mobileNavToggle" aria-expanded="false" aria-controls="sidebarNav">
+      Menu
+    </button>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+
+    <aside class="sidebar" id="sidebarNav" aria-label="Navegacion principal">
+      <div class="sidebar-header">
       <a class="brand" href="#dashboard" data-view-link="dashboard">
         <span class="brand-mark">ES</span>
         <span>
@@ -15,6 +22,10 @@
           <small>B1+ to C1</small>
         </span>
       </a>
+        <button class="sidebar-close" type="button" id="sidebarClose" aria-label="Cerrar menu">
+          Close
+        </button>
+      </div>
 
       <nav class="nav-list">
         <button class="nav-item is-active" type="button" data-view-link="dashboard">Dashboard</button>
@@ -34,6 +45,9 @@
           <h1>Fluency Builder</h1>
         </div>
         <div class="topbar-actions">
+          <button class="mobile-nav-toggle mobile-nav-toggle-inline" type="button" id="mobileNavToggleInline" aria-expanded="false" aria-controls="sidebarNav">
+            Sections
+          </button>
           <button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false">
             <span id="themeToggleLabel">Dark mode</span>
           </button>

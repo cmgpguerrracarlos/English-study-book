@@ -15,6 +15,10 @@
   --sidebar-bg: rgba(255, 253, 247, 0.82);
   --surface-soft: rgba(255, 253, 247, 0.52);
   --track-bg: #e9e1d2;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --content-width: 1180px;
 }
 
 body[data-theme="dark"] {
@@ -49,20 +53,52 @@ body {
     radial-gradient(circle at 90% 10%, rgba(184, 107, 33, 0.16), transparent 28%),
     var(--paper);
   font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.5;
 }
 
 button {
   font: inherit;
 }
 
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--blue) 72%, white);
+  outline-offset: 3px;
+}
+
 .sidebar {
   position: fixed;
   inset: 0 auto 0 0;
   width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   padding: 28px 22px;
   background: var(--sidebar-bg);
   border-right: 1px solid var(--line);
   backdrop-filter: blur(16px);
+  z-index: 20;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .brand {
@@ -84,6 +120,30 @@ button {
   font-weight: 800;
 }
 
+.mobile-nav-toggle,
+.sidebar-close {
+  display: none;
+  min-height: 48px;
+  padding: 11px 16px;
+  color: var(--ink);
+  cursor: pointer;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 13, 12, 0.42);
+  backdrop-filter: blur(4px);
+  z-index: 15;
+}
+
 .brand small,
 .eyebrow {
   display: block;
@@ -102,13 +162,15 @@ button {
 
 .nav-item {
   width: 100%;
+  min-height: 48px;
   padding: 12px 14px;
   color: var(--muted);
   text-align: left;
   cursor: pointer;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .nav-item:hover,
@@ -119,9 +181,9 @@ button {
 }
 
 .app-shell {
-  width: min(1180px, calc(100% - 300px));
+  width: min(var(--content-width), calc(100% - 300px));
   margin-left: 260px;
-  padding: 32px 40px 56px;
+  padding: 32px clamp(20px, 3vw, 40px) 56px;
 }
 
 .topbar {
@@ -134,8 +196,10 @@ button {
 
 .topbar-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
+  justify-content: flex-end;
 }
 
 h1,
@@ -168,23 +232,25 @@ h2 {
 .practice-summary {
   background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow);
 }
 
 .theme-toggle {
+  min-height: 48px;
   padding: 12px 16px;
   color: var(--ink);
   cursor: pointer;
   background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   box-shadow: var(--shadow);
   font-family: "Segoe UI", sans-serif;
 }
 
 .profile-pill {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
   padding: 12px 16px;
@@ -213,7 +279,7 @@ h2 {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
+  grid-template-columns: minmax(0, 1.9fr) repeat(3, minmax(160px, 1fr));
   gap: 16px;
 }
 
@@ -231,7 +297,7 @@ h2 {
     url("https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80");
   background-position: center;
   background-size: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
 .hero-panel p {
@@ -242,12 +308,23 @@ h2 {
 .primary-action,
 .exercise-card button,
 .option-list button {
+  min-height: 48px;
   padding: 11px 16px;
   color: #fff;
   cursor: pointer;
   background: var(--teal);
   border: 0;
-  border-radius: 8px;
+  border-radius: 999px;
+  transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease;
+}
+
+.primary-action:hover,
+.exercise-card button:hover,
+.option-list button:hover,
+.theme-toggle:hover,
+.mobile-nav-toggle:hover,
+.sidebar-close:hover {
+  transform: translateY(-1px);
 }
 
 .metric-card {
@@ -280,12 +357,23 @@ h2 {
   padding: 22px;
 }
 
+.session-strip p,
+.practice-summary p,
+.history-card p,
+.recommendation-card p,
+.lesson-panel p,
+.result-panel p,
+.review-card p,
+.skill-card p {
+  text-wrap: balance;
+}
+
 .skills-grid,
 .exercise-grid,
 .review-grid,
 .dashboard-columns {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 }
 
@@ -378,7 +466,7 @@ h2 {
   padding: 18px;
   background: var(--surface-soft);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .placement-actions {
@@ -418,7 +506,7 @@ h2 {
   place-items: center;
   color: #fff;
   background: var(--ink);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 800;
 }
 
@@ -436,11 +524,12 @@ h2 {
 
 .answer-field input {
   width: 100%;
+  min-height: 48px;
   padding: 12px 14px;
   color: var(--ink);
   background: var(--input-bg);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font: inherit;
 }
 
@@ -452,7 +541,7 @@ h2 {
   resize: vertical;
   background: var(--input-bg);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font: inherit;
   line-height: 1.6;
 }
@@ -537,11 +626,12 @@ h2 {
 
 .compact-field select {
   width: 100%;
+  min-height: 48px;
   padding: 12px 14px;
   color: var(--ink);
   background: var(--input-bg);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font: inherit;
 }
 
@@ -563,7 +653,7 @@ h2 {
   padding: 16px;
   background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .writing-mini-card strong,
@@ -613,7 +703,7 @@ h2 {
 .review-overview article {
   background: var(--panel-strong);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow);
 }
 
@@ -669,6 +759,17 @@ h2 {
   font-family: "Segoe UI", sans-serif;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -680,42 +781,77 @@ h2 {
   }
 }
 
+@media (max-width: 1080px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-panel,
+  .metric-card:first-of-type {
+    min-height: 220px;
+  }
+
+  .practice-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .practice-summary p {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 920px) {
   .sidebar {
+    inset: 0 auto 0 0;
+    width: min(320px, calc(100vw - 32px));
+    padding: 20px 18px 28px;
+    border-right: 1px solid var(--line);
+    transform: translateX(-100%);
+    transition: transform 220ms ease;
+  }
+
+  body.nav-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-toggle,
+  .sidebar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 12;
+  }
+
+  .mobile-nav-toggle-inline {
     position: static;
-    width: 100%;
-    padding: 18px;
   }
 
   .nav-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 18px;
-  }
-
-  .nav-item {
-    text-align: center;
+    margin-top: 6px;
   }
 
   .app-shell {
     width: 100%;
     margin-left: 0;
-    padding: 22px;
+    padding: 80px 22px 32px;
   }
 
-  .topbar,
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .topbar-actions {
-    align-items: stretch;
+  .topbar {
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .dashboard-grid,
-  .skills-grid,
-  .exercise-grid,
-  .review-grid,
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .lesson-layout,
   .dashboard-columns,
   .review-overview,
@@ -735,7 +871,6 @@ h2 {
   .session-strip,
   .practice-summary {
     align-items: flex-start;
-    grid-template-columns: 1fr;
     flex-direction: column;
   }
 
@@ -745,7 +880,6 @@ h2 {
 }
 
 @media (max-width: 620px) {
-  .nav-list,
   .dashboard-grid,
   .skills-grid,
   .exercise-grid,
@@ -763,12 +897,52 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
-    align-items: flex-start;
-    flex-direction: column;
+  .mobile-nav-toggle {
+    top: 14px;
+    left: 14px;
   }
 
   h1 {
     font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.65rem;
+  }
+
+  .app-shell {
+    padding: 78px 16px 28px;
+  }
+
+  .hero-panel,
+  .metric-card,
+  .lesson-panel,
+  .question-card,
+  .exercise-card,
+  .review-card,
+  .result-panel,
+  .practice-summary,
+  .session-strip,
+  .skill-card {
+    padding: 18px;
+  }
+
+  .profile-pill,
+  .topbar-actions {
+    width: 100%;
+  }
+
+  .profile-pill {
+    justify-content: flex-start;
+  }
+
+  .sidebar {
+    width: min(300px, calc(100vw - 20px));
+  }
+}
+
+@media (min-width: 921px) {
+  .mobile-nav-toggle-inline {
+    display: none;
   }
 }

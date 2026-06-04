@@ -13,6 +13,9 @@ const state = {
 
 const views = document.querySelectorAll("[data-view]");
 const navButtons = document.querySelectorAll("[data-view-link]");
+const mobileNavButtons = document.querySelectorAll("#mobileNavToggle, #mobileNavToggleInline");
+const sidebarBackdrop = document.querySelector("#sidebarBackdrop");
+const isMobileViewport = () => window.innerWidth <= 920;
 
 function loadProgress() {
   const fallback = { attempts: [], completedLessons: [], reviewQueue: [], writings: [] };
@@ -106,7 +109,47 @@ function showView(viewName) {
   views.forEach((view) => view.classList.toggle("is-visible", view.dataset.view === viewName));
   navButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.viewLink === viewName);
+    button.setAttribute("aria-current", button.dataset.viewLink === viewName ? "page" : "false");
   });
+
+  if (isMobileViewport()) {
+    closeMobileNav();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+function syncMobileNavState() {
+  const isOpen = document.body.classList.contains("nav-open");
+  mobileNavButtons.forEach((button) => {
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  if (sidebarBackdrop) {
+    sidebarBackdrop.hidden = !isOpen;
+  }
+}
+
+function openMobileNav() {
+  document.body.classList.add("nav-open");
+  syncMobileNavState();
+}
+
+function closeMobileNav() {
+  document.body.classList.remove("nav-open");
+  syncMobileNavState();
+}
+
+function toggleMobileNav() {
+  if (!isMobileViewport()) {
+    return;
+  }
+
+  if (document.body.classList.contains("nav-open")) {
+    closeMobileNav();
+    return;
+  }
+
+  openMobileNav();
 }
 
 function renderDashboard() {
@@ -630,6 +673,14 @@ document.addEventListener("click", (event) => {
     showView(viewLink.dataset.viewLink);
   }
 
+  if (event.target.id === "mobileNavToggle" || event.target.id === "mobileNavToggleInline") {
+    toggleMobileNav();
+  }
+
+  if (event.target.id === "sidebarClose" || event.target.id === "sidebarBackdrop") {
+    closeMobileNav();
+  }
+
   const placementOption = event.target.closest("[data-question]");
   if (placementOption) {
     const questionIndex = Number(placementOption.dataset.question);
@@ -677,7 +728,23 @@ document.addEventListener("input", (event) => {
   }
 });
 
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeMobileNav();
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (!isMobileViewport()) {
+    closeMobileNav();
+  } else {
+    syncMobileNavState();
+  }
+});
+
 applyTheme();
+syncMobileNavState();
+showView("dashboard");
 renderDashboard();
 renderSkills();
 renderRecommendations();
