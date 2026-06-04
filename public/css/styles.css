@@ -237,10 +237,16 @@ h2 {
 
 .skills-grid,
 .exercise-grid,
-.review-grid {
+.review-grid,
+.dashboard-columns {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
+}
+
+.dashboard-columns {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 18px;
 }
 
 .skill-card,
@@ -248,7 +254,9 @@ h2 {
 .exercise-card,
 .review-card,
 .result-panel,
-.lesson-panel {
+.lesson-panel,
+.recommendation-card,
+.history-card {
   padding: 20px;
 }
 
@@ -439,6 +447,73 @@ h2 {
   margin-bottom: 0;
 }
 
+.recommendation-list,
+.history-list {
+  display: grid;
+  gap: 12px;
+}
+
+.recommendation-card,
+.history-card,
+.review-overview article {
+  background: rgba(255, 253, 247, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.history-card small {
+  color: var(--muted);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.status-ok,
+.status-review {
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 999px;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-ok {
+  background: var(--green);
+}
+
+.status-review {
+  background: var(--red);
+}
+
+.review-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.review-overview article {
+  padding: 16px 18px;
+}
+
+.review-overview strong {
+  display: block;
+  font-size: 1.8rem;
+}
+
+.review-overview span {
+  color: var(--muted);
+  font-family: "Segoe UI", sans-serif;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -481,7 +556,9 @@ h2 {
   .skills-grid,
   .exercise-grid,
   .review-grid,
-  .lesson-layout {
+  .lesson-layout,
+  .dashboard-columns,
+  .review-overview {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -504,7 +581,9 @@ h2 {
   .exercise-grid,
   .review-grid,
   .lesson-layout,
-  .compact-grid {
+  .compact-grid,
+  .dashboard-columns,
+  .review-overview {
     grid-template-columns: 1fr;
   }
 

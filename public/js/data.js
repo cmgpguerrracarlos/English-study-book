@@ -124,5 +124,23 @@ const learningData = {
     { front: "make progress", back: "improve over time", tag: "collocation" },
     { front: "may have done", back: "possible past explanation", tag: "grammar" },
     { front: "I agree", back: "not 'I am agree'", tag: "error clinic" }
-  ]
+  ],
+  recommendations: {
+    Grammar: [
+      "Repeat modal verbs for past speculation before moving to conditionals.",
+      "Review verb patterns that usually transfer badly from Spanish."
+    ],
+    Vocabulary: [
+      "Do one short collocation block before your next writing task.",
+      "Recycle workplace phrases inside a sentence, not as isolated words."
+    ],
+    Reading: [
+      "Practice inference questions after scanning for the main idea first.",
+      "Summarize each paragraph in one sentence to improve retention."
+    ],
+    Writing: [
+      "Use softer disagreement and clearer topic sentences in longer answers.",
+      "Draft first, then revise for register and sentence linking."
+    ]
+  }
 };

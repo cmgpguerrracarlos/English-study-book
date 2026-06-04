@@ -43,6 +43,22 @@ function getWeakSkillCount() {
   return Math.max(learningData.reviews.length, incorrectAttempts.length);
 }
 
+function getSkillSnapshot() {
+  return learningData.skills.map((skill) => {
+    const attempts = state.progress.attempts.filter((attempt) => attempt.skill === skill.name);
+    const score = attempts.length
+      ? Math.round((attempts.filter((attempt) => attempt.isCorrect).length / attempts.length) * 100)
+      : skill.score;
+
+    return { ...skill, score, attempts };
+  });
+}
+
+function getWeakestSkill() {
+  const snapshot = getSkillSnapshot().sort((left, right) => left.score - right.score);
+  return snapshot[0];
+}
+
 function showView(viewName) {
   views.forEach((view) => view.classList.toggle("is-visible", view.dataset.view === viewName));
   navButtons.forEach((button) => {
@@ -61,11 +77,8 @@ function renderDashboard() {
 
 function renderSkills() {
   const container = document.querySelector("#skillCards");
-  container.innerHTML = learningData.skills.map((skill) => {
-    const skillAttempts = state.progress.attempts.filter((attempt) => attempt.skill === skill.name);
-    const skillScore = skillAttempts.length
-      ? Math.round((skillAttempts.filter((attempt) => attempt.isCorrect).length / skillAttempts.length) * 100)
-      : skill.score;
+  container.innerHTML = getSkillSnapshot().map((skill) => {
+    const skillScore = skill.score;
 
     return `
     <article class="skill-card tone-${skill.tone}">
@@ -80,6 +93,25 @@ function renderSkills() {
     </article>
   `;
   }).join("");
+}
+
+function renderRecommendations() {
+  const weakestSkill = getWeakestSkill();
+  const container = document.querySelector("#recommendationList");
+  const lines = learningData.recommendations[weakestSkill.name] || [];
+
+  container.innerHTML = `
+    <article class="recommendation-card">
+      <p class="eyebrow">Priority skill</p>
+      <h3>${weakestSkill.name}</h3>
+      <p>${weakestSkill.focus}</p>
+    </article>
+    ${lines.map((line) => `
+      <article class="recommendation-card">
+        <p>${line}</p>
+      </article>
+    `).join("")}
+  `;
 }
 
 function renderPlacement() {
@@ -165,15 +197,68 @@ function renderReviews() {
     .map((attempt) => ({
       front: attempt.prompt,
       back: attempt.answer,
-      tag: attempt.skill
+      tag: attempt.skill,
+      due: "Now"
     }));
-  const cards = [...missedCards, ...learningData.reviews];
+  const cards = [...missedCards, ...learningData.reviews.map((card, index) => ({
+    ...card,
+    due: index < 2 ? "Today" : "This week"
+  }))];
 
   container.innerHTML = cards.map((card) => `
     <article class="review-card">
-      <span>${card.tag}</span>
+      <span>${card.tag} · ${card.due}</span>
       <h3>${card.front}</h3>
       <p>${card.back}</p>
+    </article>
+  `).join("");
+
+  renderReviewOverview(cards);
+}
+
+function renderReviewOverview(cards) {
+  const dueNow = cards.filter((card) => card.due === "Now").length;
+  const dueToday = cards.filter((card) => card.due === "Today").length;
+  const total = cards.length;
+  const container = document.querySelector("#reviewOverview");
+
+  container.innerHTML = `
+    <article>
+      <strong>${total}</strong>
+      <span>cards</span>
+    </article>
+    <article>
+      <strong>${dueNow}</strong>
+      <span>due now</span>
+    </article>
+    <article>
+      <strong>${dueToday}</strong>
+      <span>today</span>
+    </article>
+  `;
+}
+
+function renderHistory() {
+  const container = document.querySelector("#historyList");
+  const attempts = [...state.progress.attempts].slice(-5).reverse();
+
+  if (attempts.length === 0) {
+    container.innerHTML = `
+      <article class="history-card">
+        <p>No hay historial todavia. El primer intento aparecera aqui con skill, resultado y fecha.</p>
+      </article>
+    `;
+    return;
+  }
+
+  container.innerHTML = attempts.map((attempt) => `
+    <article class="history-card">
+      <div class="history-header">
+        <strong>${attempt.skill}</strong>
+        <span class="${attempt.isCorrect ? "status-ok" : "status-review"}">${attempt.isCorrect ? "Correct" : "Review"}</span>
+      </div>
+      <p>${attempt.prompt}</p>
+      <small>${new Date(attempt.createdAt).toLocaleDateString("es-UY")} · ${attempt.topic}</small>
     </article>
   `).join("");
 }
@@ -231,7 +316,9 @@ function submitExercise(index) {
   saveProgress();
   renderDashboard();
   renderSkills();
+  renderRecommendations();
   renderReviews();
+  renderHistory();
   renderPracticeSummary();
 }
 
@@ -259,8 +346,10 @@ document.addEventListener("click", (event) => {
 
 renderDashboard();
 renderSkills();
+renderRecommendations();
 renderPlacement();
 renderPath();
 renderLesson();
 renderExercises();
 renderReviews();
+renderHistory();
